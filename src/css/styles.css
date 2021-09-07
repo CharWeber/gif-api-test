@@ -1,0 +1,8 @@
+.box{
+  height: 150px;
+  width:150px;
+  background-color: black;
+}
+ul{
+  list-style-type: none;
+}

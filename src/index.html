@@ -1,9 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>template-repo</title>
+  <title>gif-api-test</title>
 </head>
 <body>
-  <h1>don't forget to change the titles in webpack.config too</h1>
+  <div class="container">
+    <div class="form-control-group">
+      <form type="submit" id="gifSearchForm">
+        <label for="gifSearchBar">search for gifs here</label>
+        <input type="text" id="gifSearchBar">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </form>
+    </div>
+    <div class="searchResults" id="searchResults">
+      <ul id="resultDisplay"></ul>
+    </div>
+    <button class="btn btn-success" id="gifTrending">Trending!</button>
+    <ul id="trendingDisplay"></ul>
+    <button class="btn btn-danger" id="gifRandom">Random!</button>
+    <ul id="randomDisplay"></ul>
+    <!-- <div class="box js-box"></div> -->
+  </div>
+  
 </body>
 </html>
