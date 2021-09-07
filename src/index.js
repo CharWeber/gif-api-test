@@ -27,11 +27,13 @@ $(document).ready(function () {
     e.preventDefault();
     const search = $('#gifSearchBar').val();
     $('#gifSearchBar').val("");
-    
+
     let request = new XMLHttpRequest();
-    
+
     const url = `https://api.giphy.com/v1/gifs/search?api_key=${process.env.API_KEY}&q=${search}&limit=5&offset=0&rating=g&lang=en`;
-    
+
+
+
     request.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
         const response = JSON.parse(this.responseText);
@@ -41,13 +43,13 @@ $(document).ready(function () {
             console.error(isResponseDefined.message);
             throw ReferenceError("Response is not defined!");
           }
-        } catch(error) {
+        } catch (error) {
           console.error(`There was an error: ${error.message}`);
         }
         getElements(response);
       }
     }
-    
+
     request.open("GET", url, true);
     request.send();
 
@@ -57,7 +59,7 @@ $(document).ready(function () {
     }
   });
 
-  $('#gifTrending').click(function() {
+  $('#gifTrending').click(function () {
     const url = `https://api.giphy.com/v1/gifs/trending?api_key=${process.env.API_KEY}&limit=5&rating=g`;
     let request = new XMLHttpRequest();
     request.onreadystatechange = function () {
@@ -75,7 +77,7 @@ $(document).ready(function () {
     }
   });
 
-  $('#gifRandom').click(function() {
+  $('#gifRandom').click(function () {
     const url = `https://api.giphy.com/v1/gifs/random?api_key=${process.env.API_KEY}&tag=&rating=r`;
     let request = new XMLHttpRequest();
     request.onreadystatechange = function () {
@@ -91,5 +93,48 @@ $(document).ready(function () {
       $('ul#randomDisplay').empty();
       $('ul#randomDisplay').append(`<li id='${response.data.id}'><a href='${response.data.url}'><img src='${response.data.images.downsized.url}'></a></li>`);
     }
+  });
+
+  $('#gifUploadForm').submit(function (e) {
+    e.preventDefault();
+    const upload = $('#gifUploadBar').val();
+    // const tags = $('#gifTags').val();
+    // let body = {
+    //   source_image_url:upload
+    // }
+    // let body_str = Json.stringify(body)
+    // postMessage.environment.set('request_body', body_str)
+
+    $('#gifUpload').val("");
+    $('#gifTags').val("");
+
+    let request = new XMLHttpRequest();
+
+    const url = `https://upload.giphy.com/v1/gifs`;
+
+    // ?apikey= &username= &file= &souce_image_url &tags="sting, with, commas" &source_post_url=
+
+    const data = `{ api_key: ${process.env.API_KEY}, username: "charlestweber", source_image_url: ${upload} }`
+
+    // const data_str = JSON.stringify(data);
+    console.log(data);
+    request.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        const response = JSON.parse(this.responseText);
+        try {
+          const isResponseDefined = checkResponse(response);
+          if (isResponseDefined instanceof Error) {
+            console.error(isResponseDefined.message);
+            throw ReferenceError("Response is not defined!");
+          }
+        } catch (error) {
+          console.error(`There was an error: ${error.message}`);
+        }
+          $('#uploadComplete').show();
+          $('#uploadComplete').text(`Upload successful: <a href='https://giphy.com/gifs/${response.data.id}>see here</a>`)
+        }
+      }
+      request.open("POST", url, true);
+      request.send(data);
   });
 });
